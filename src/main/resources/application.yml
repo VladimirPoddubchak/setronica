@@ -1,0 +1,22 @@
+spring:
+  jpa:
+    database: POSTGRESQL
+    show-sql: true
+    hibernate:
+      ddl: false
+      ddl-auto: validate
+
+  datasource:
+    platform: org.hibernate.dialect.PostgreSQL95Dialect
+    url: jdbc:postgresql://127.0.0.1:5432/setronica_db?currentSchema=setronica
+    username: postgres
+    password: root
+    driverClassName: org.postgresql.Driver
+
+  flyway:
+    user: postgres
+    password: root
+    url: jdbc:postgresql://127.0.0.1:5432/setronica_db
+    schemas:
+      - setronica
+    locations: classpath:db/migration

@@ -4,4 +4,8 @@ public class IllegalProductPriceException extends IllegalArgumentException{
     public IllegalProductPriceException(String message, Throwable cause) {
         super(message, cause);
     }
+
+    public IllegalProductPriceException(String s) {
+        super(s);
+    }
 }

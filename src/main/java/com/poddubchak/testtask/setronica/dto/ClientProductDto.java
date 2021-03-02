@@ -14,11 +14,11 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-@Entity
+//@Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ClientProductDto implements Serializable {
+public class ClientProductDto implements Serializable{
     @Id
     private UUID id;
     @Enumerated(EnumType.STRING)
@@ -28,4 +28,6 @@ public class ClientProductDto implements Serializable {
     @Enumerated(EnumType.STRING)
     private Currency currency;
     private BigDecimal price;
+
+
 }

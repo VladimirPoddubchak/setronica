@@ -6,14 +6,17 @@ import com.poddubchak.testtask.setronica.dto.ProductDto;
 import com.poddubchak.testtask.setronica.exception.*;
 import com.poddubchak.testtask.setronica.model.Product;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface AdminProductInterface {
-    UUID addProduct(ProductDto dto) throws IllegalProductException;
-    Boolean deleteProductById(UUID id) throws ProductNotFoundException, IllegalIdException;
-    Product findById(UUID id) throws ProductNotFoundException;
-    Long addProductInfoByProductId(UUID id, InfoDto dto) throws ProductNotFoundException, IllegalProductInfoException;
-    Long addPriceInfoByProductId(UUID id, PriceDto dto) throws ProductNotFoundException, IllegalProductPriceException;
-    Long editProductInfoByProductId(UUID id, InfoDto dto) throws ProductNotFoundException, IllegalProductInfoException;
-    Long editPriceInfoByProductId(UUID id, PriceDto dto) throws ProductNotFoundException, IllegalProductPriceException;
+    UUID createProduct(ProductDto dto) throws IllegalProductException;
+    Boolean deleteProductById(String id) throws ProductNotFoundException, IllegalIdException;
+    Product findProductById(String id) throws ProductNotFoundException;
+    Long addProductInfoByProductId(String id, InfoDto dto) throws ProductNotFoundException, IllegalProductInfoException;
+    Long addPriceInfoByProductId(String id, PriceDto dto) throws ProductNotFoundException, IllegalProductPriceException;
+    Long editProductInfoByProductId(String id, InfoDto dto) throws ProductNotFoundException, IllegalProductInfoException;
+    Long editPriceInfoByProductId(String id, PriceDto dto) throws ProductNotFoundException, IllegalProductPriceException;
+
+    List<Product> findAll() throws ProductNotFoundException;
 }

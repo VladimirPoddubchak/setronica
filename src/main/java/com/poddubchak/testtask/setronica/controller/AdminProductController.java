@@ -7,7 +7,7 @@ import com.poddubchak.testtask.setronica.dto.InfoDto;
 import com.poddubchak.testtask.setronica.model.PriceInfo;
 import com.poddubchak.testtask.setronica.model.Product;
 import com.poddubchak.testtask.setronica.model.ProductInfo;
-import com.poddubchak.testtask.setronica.service.AdminProductService;
+import com.poddubchak.testtask.setronica.service.admin.AdminProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;

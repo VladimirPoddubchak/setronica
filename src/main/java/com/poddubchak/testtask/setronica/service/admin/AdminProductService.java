@@ -1,4 +1,4 @@
-package com.poddubchak.testtask.setronica.service;
+package com.poddubchak.testtask.setronica.service.admin;
 
 import com.poddubchak.testtask.setronica.dto.PriceDto;
 import com.poddubchak.testtask.setronica.dto.ProductDto;
@@ -38,6 +38,7 @@ public class AdminProductService {
 
     @Transactional
     public UUID createProduct(ProductDto dto){
+
         Map<Language, ProductInfo> productInfoMap = new HashMap<>();
         Map<Currency, PriceInfo> priceInfoMap = new HashMap<>();
 
@@ -48,6 +49,8 @@ public class AdminProductService {
 
         return productRepository.save(product).getId();
     }
+
+
 
     public Product findById (String id) throws NoSuchElementException{
         UUID uuid = UUID.fromString(id);
@@ -82,19 +85,7 @@ public class AdminProductService {
         return result;
     }
 
-    public List<Product> findAll () throws NoSuchElementException {
-        return (List<Product>) productRepository.findAll();
-    }
 
-    public List<Product> findAllByLang(String lang){
-        Language language = Language.valueOf(lang);
-        return  productRepository.findAllByLanguage(lang);
-    }
-
-    public List<Product> findAllByCurrency(String curr){
-        Currency currency = Currency.valueOf(curr);
-        return  productRepository.findAllByCurrency(curr);
-    }
 
     public List<Product> findAllByLanguageAndCurrency(String lang, String curr){
         Language language = Language.valueOf(lang);
@@ -202,4 +193,17 @@ public class AdminProductService {
         return priceRepository.save(info);
     }
 
+    public List<Product> findAll () throws NoSuchElementException {
+        return (List<Product>) productRepository.findAll();
+    }
+
+    public List<Product> findAllByLang(String lang){
+        Language language = Language.valueOf(lang);
+        return  productRepository.findAllByLanguage(lang);
+    }
+
+    public List<Product> findAllByCurrency(String curr){
+        Currency currency = Currency.valueOf(curr);
+        return  productRepository.findAllByCurrency(curr);
+    }
 }

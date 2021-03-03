@@ -1,10 +1,8 @@
 package com.poddubchak.testtask.setronica.dto;
 
 
-import com.poddubchak.testtask.setronica.exception.IllegalProductException;
 import com.poddubchak.testtask.setronica.exception.IllegalProductPriceException;
-import com.poddubchak.testtask.setronica.model.Currency;
-import com.poddubchak.testtask.setronica.model.Language;
+import com.poddubchak.testtask.setronica.model.CurrencyEnum;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
@@ -18,7 +16,7 @@ import java.math.BigDecimal;
 @Setter
 @Slf4j
 public class PriceDto implements Serializable, Validatable{
-    private Currency currency;
+    private CurrencyEnum currency;
     private BigDecimal price;
 
     @Override

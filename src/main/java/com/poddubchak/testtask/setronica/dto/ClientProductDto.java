@@ -1,7 +1,7 @@
 package com.poddubchak.testtask.setronica.dto;
 
-import com.poddubchak.testtask.setronica.model.Currency;
-import com.poddubchak.testtask.setronica.model.Language;
+import com.poddubchak.testtask.setronica.model.CurrencyEnum;
+import com.poddubchak.testtask.setronica.model.LanguageEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,11 +23,11 @@ public class ClientProductDto implements Serializable{
     @Id
     private UUID id;
     @Enumerated(EnumType.STRING)
-    private Language language;
+    private LanguageEnum language;
     private String name;
     private String description;
     @Enumerated(EnumType.STRING)
-    private Currency currency;
+    private CurrencyEnum currency;
     private BigDecimal price;
     private LocalDateTime created;
     private LocalDateTime modified;

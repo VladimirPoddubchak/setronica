@@ -2,15 +2,9 @@ package com.poddubchak.testtask.setronica.utils;
 
 import com.poddubchak.testtask.setronica.exception.*;
 import com.poddubchak.testtask.setronica.model.*;
-import com.poddubchak.testtask.setronica.repository.ProductRepository;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 @Slf4j
@@ -35,38 +29,38 @@ public class SetronicaUtils {
         }
     }
 
-    public static Currency validCurrency(@NonNull String curr){
+    public static CurrencyEnum validCurrency(@NonNull String curr){
         try{
-            Currency currency = Currency.valueOf(curr.toUpperCase());
+            CurrencyEnum currency = CurrencyEnum.valueOf(curr.toUpperCase());
         }catch (IllegalArgumentException ex){
             log.error("Invalid currency:"+curr);
             throw  new NoSuchCurrencyException("Invalid currency:"+curr,ex);
         }
-        return Currency.valueOf(curr.toUpperCase());
+        return CurrencyEnum.valueOf(curr.toUpperCase());
     }
 
     public static void validateCurrency(@NonNull String curr){
         try{
-            Currency.valueOf(curr.toUpperCase());
+            CurrencyEnum.valueOf(curr.toUpperCase());
         }catch (IllegalArgumentException ex){
             log.error("Invalid currency:"+curr);
             throw  new NoSuchCurrencyException("Invalid currency:"+curr,ex);
         }
     }
 
-    public static Language validLanguage(@NonNull String lang){
+    public static LanguageEnum validLanguage(@NonNull String lang){
         try{
-            Language.valueOf(lang.toUpperCase());
+            LanguageEnum.valueOf(lang.toUpperCase());
         }catch (IllegalArgumentException ex){
             log.error("Invalid language. lang:"+lang);
             throw  new NoSuchLanguageException("Invalid language. lang:"+lang,ex);
         }
-        return Language.valueOf(lang.toUpperCase());
+        return LanguageEnum.valueOf(lang.toUpperCase());
     }
 
     public static void validateLanguage(@NonNull String lang){
         try{
-            Language.valueOf(lang.toUpperCase());
+            LanguageEnum.valueOf(lang.toUpperCase());
         }catch (IllegalArgumentException ex){
             log.error("Invalid language:"+lang);
             throw  new NoSuchLanguageException("Invalid language:"+lang,ex);

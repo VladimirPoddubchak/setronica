@@ -4,6 +4,8 @@ package com.poddubchak.testtask.setronica.controller;
 import com.poddubchak.testtask.setronica.dto.ClientError;
 import com.poddubchak.testtask.setronica.dto.ClientProductDto;
 import com.poddubchak.testtask.setronica.exception.*;
+import com.poddubchak.testtask.setronica.model.CurrencyEnum;
+import com.poddubchak.testtask.setronica.model.LanguageEnum;
 import com.poddubchak.testtask.setronica.service.client.ProductClientService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,14 +28,25 @@ public class ProductClientController {
         log.info("ProductClientController started");
     }
 
+    @GetMapping("/currency")
+    public CurrencyEnum[] getCurrency(){
+        return CurrencyEnum.values();
+    }
+
+    @GetMapping("/language")
+    public LanguageEnum[] getLanguage(){
+        return LanguageEnum.values();
+    }
+
+
     @GetMapping("/search/{lang}/{curr}")
-    public List<ClientProductDto> searchByLanguageAndCurrencyPageable(@PathVariable  String lang,@PathVariable  String curr, @RequestParam(name="text") String text, @RequestParam(name="page") int page, @RequestParam(name="size") int size){
+    public List<ClientProductDto> searchByLanguageAndCurrencyPageable(@PathVariable  String lang,@PathVariable  String curr, @RequestParam(name="text") String text, @RequestParam(name="page",defaultValue = "0") int page, @RequestParam(name="size",defaultValue = "10") int size){
 
         return productClientService.searchByLanguageAndCurrencyPageable(lang,curr,text,page,size);
     }
 
     @GetMapping("all/{lang}/{curr}")
-    public List<ClientProductDto> findAllByLanguageAndCurrencyPageable(@PathVariable String lang, @PathVariable  String curr, @RequestParam(name="page") int page, @RequestParam(name="size") int size){
+    public List<ClientProductDto> findAllByLanguageAndCurrencyPageable(@PathVariable String lang, @PathVariable  String curr, @RequestParam(name="page",defaultValue = "0") int page, @RequestParam(name="size",defaultValue = "10") int size){
         return productClientService.findAllByLanguageAndCurrencyPageable(lang,curr,page,size);
     }
 

@@ -22,7 +22,7 @@ public class PriceInfo implements Serializable {
 
     @Column(name = "currency")
     @Enumerated(EnumType.STRING)
-    private Currency currency;
+    private CurrencyEnum currency;
 
     @Column(name = "price")
     private BigDecimal price;
@@ -33,7 +33,7 @@ public class PriceInfo implements Serializable {
     @Column(name = "modified")
     private LocalDateTime modified;
 
-    public PriceInfo(Currency currency, BigDecimal price, LocalDateTime created, LocalDateTime modified) {
+    public PriceInfo(CurrencyEnum currency, BigDecimal price, LocalDateTime created, LocalDateTime modified) {
         this.currency = currency;
         this.price = price;
         this.created = created;

@@ -1,15 +1,12 @@
 package com.poddubchak.testtask.setronica.dto;
 
 
-import com.poddubchak.testtask.setronica.exception.IllegalProductException;
 import com.poddubchak.testtask.setronica.exception.IllegalProductInfoException;
-import com.poddubchak.testtask.setronica.model.Language;
+import com.poddubchak.testtask.setronica.model.LanguageEnum;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 
 @Data
 @NoArgsConstructor
@@ -18,7 +15,7 @@ import java.math.BigDecimal;
 @Setter
 @Slf4j
 public class InfoDto implements Serializable, Validatable {
-    private Language language;
+    private LanguageEnum language;
     private String name;
     private String description;
 

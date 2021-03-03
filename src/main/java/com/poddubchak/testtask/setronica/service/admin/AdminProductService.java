@@ -54,8 +54,8 @@ public class AdminProductService implements AdminProductInterface {
             throw new IllegalProductException("Invalid ProductDto." ,ex);
         }
 
-        Map<Language, ProductInfo> productInfoMap = new HashMap<>();
-        Map<Currency, PriceInfo> priceInfoMap = new HashMap<>();
+        Map<LanguageEnum, ProductInfo> productInfoMap = new HashMap<>();
+        Map<CurrencyEnum, PriceInfo> priceInfoMap = new HashMap<>();
 
         LocalDateTime created = LocalDateTime.now();
 
@@ -297,68 +297,65 @@ public class AdminProductService implements AdminProductInterface {
 
     public void addProducts(){
 
-        Map<Language, ProductInfo> productInfoMap = new HashMap<>();
-        Map<Currency, PriceInfo> priceInfoMap = new HashMap<>();
+        Map<LanguageEnum, ProductInfo> productInfoMap = new HashMap<>();
+        Map<CurrencyEnum, PriceInfo> priceInfoMap = new HashMap<>();
 
         LocalDateTime created = LocalDateTime.now();
 
  //========
         productInfoMap.clear();
         priceInfoMap.clear();
-        productInfoMap.put(Language.RUS,new ProductInfo(Language.RUS, "Хлеб","Хлеб. Описание. Рус", created, created));
-        productInfoMap.put(Language.BEL,new ProductInfo(Language.BEL, "Хлеб","Хлеб. Описание. Бел", created, created));
-        productInfoMap.put(Language.UKR,new ProductInfo(Language.UKR, "Хлеб","Хлеб. Описание. Укр", created, created));
-        productInfoMap.put(Language.ENG,new ProductInfo(Language.ENG, "Bread","Bread. Description. Eng", created, created));
-        productInfoMap.put(Language.ITA,new ProductInfo(Language.ITA, "Bread","Bread. Description. Ita", created, created));
-        productInfoMap.put(Language.KOR,new ProductInfo(Language.KOR, "Bread","Bread. Description. Kor", created, created));
+        productInfoMap.put(LanguageEnum.RU,new ProductInfo(LanguageEnum.RU, "Хлеб","Хлеб. Описание. Рус", created, created));
+        productInfoMap.put(LanguageEnum.BE,new ProductInfo(LanguageEnum.BE, "Хлеб","Хлеб. Описание. Бел", created, created));
+        productInfoMap.put(LanguageEnum.UK,new ProductInfo(LanguageEnum.UK, "Хлеб","Хлеб. Описание. Укр", created, created));
+        productInfoMap.put(LanguageEnum.EN,new ProductInfo(LanguageEnum.EN, "Bread","Bread. Description. Eng", created, created));
+        productInfoMap.put(LanguageEnum.IT,new ProductInfo(LanguageEnum.IT, "Bread","Bread. Description. Ita", created, created));
+        productInfoMap.put(LanguageEnum.KO,new ProductInfo(LanguageEnum.KO, "Bread","Bread. Description. Kor", created, created));
 
-        priceInfoMap.put(Currency.RUB,new PriceInfo(Currency.RUB, BigDecimal.valueOf(40), created, created));
-        priceInfoMap.put(Currency.UAH,new PriceInfo(Currency.UAH, BigDecimal.valueOf(40), created, created));
-        priceInfoMap.put(Currency.USD,new PriceInfo(Currency.USD, BigDecimal.valueOf(40), created, created));
-        priceInfoMap.put(Currency.CAD,new PriceInfo(Currency.CAD, BigDecimal.valueOf(40), created, created));
-        priceInfoMap.put(Currency.GBP,new PriceInfo(Currency.GBP, BigDecimal.valueOf(40), created, created));
-
-        productRepository.save(new Product(created, created, productInfoMap, priceInfoMap));
-
-//========
-        productInfoMap.clear();
-        priceInfoMap.clear();
-
-        productInfoMap.put(Language.RUS,new ProductInfo(Language.RUS, "Молоко","Молоко. Описание. Рус", created, created));
-        productInfoMap.put(Language.BEL,new ProductInfo(Language.BEL, "Молоко","Молоко. Описание. Бел", created, created));
-        productInfoMap.put(Language.ITA,new ProductInfo(Language.ITA, "Milk","Milk. Description. Ita", created, created));
-        productInfoMap.put(Language.KOR,new ProductInfo(Language.KOR, "Milk","Milk. Description. Kor", created, created));
-
-        priceInfoMap.put(Currency.RUB,new PriceInfo(Currency.RUB, BigDecimal.valueOf(50), created, created));
-        priceInfoMap.put(Currency.UAH,new PriceInfo(Currency.UAH, BigDecimal.valueOf(50), created, created));
-        priceInfoMap.put(Currency.USD,new PriceInfo(Currency.USD, BigDecimal.valueOf(50), created, created));
+        priceInfoMap.put(CurrencyEnum.RUB,new PriceInfo(CurrencyEnum.RUB, BigDecimal.valueOf(40), created, created));
+        priceInfoMap.put(CurrencyEnum.UAH,new PriceInfo(CurrencyEnum.UAH, BigDecimal.valueOf(40), created, created));
+        priceInfoMap.put(CurrencyEnum.USD,new PriceInfo(CurrencyEnum.USD, BigDecimal.valueOf(40), created, created));
+        priceInfoMap.put(CurrencyEnum.CAD,new PriceInfo(CurrencyEnum.CAD, BigDecimal.valueOf(40), created, created));
+        priceInfoMap.put(CurrencyEnum.GBP,new PriceInfo(CurrencyEnum.GBP, BigDecimal.valueOf(40), created, created));
 
         productRepository.save(new Product(created, created, productInfoMap, priceInfoMap));
 
-//========
         productInfoMap.clear();
         priceInfoMap.clear();
-        productInfoMap.put(Language.RUS,new ProductInfo(Language.RUS, "Мясо","Мясо. Описание. Рус", created, created));
-        productInfoMap.put(Language.ENG,new ProductInfo(Language.ENG, "Meat","Meat. Description. Eng", created, created));
 
-        priceInfoMap.put(Currency.RUB,new PriceInfo(Currency.RUB, BigDecimal.valueOf(100), created, created));
-        priceInfoMap.put(Currency.GBP,new PriceInfo(Currency.GBP, BigDecimal.valueOf(100), created, created));
+        productInfoMap.put(LanguageEnum.RU,new ProductInfo(LanguageEnum.RU, "Молоко","Молоко. Описание. Рус", created, created));
+        productInfoMap.put(LanguageEnum.BE,new ProductInfo(LanguageEnum.BE, "Молоко","Молоко. Описание. Бел", created, created));
+        productInfoMap.put(LanguageEnum.IT,new ProductInfo(LanguageEnum.IT, "Milk","Milk. Description. Ita", created, created));
+        productInfoMap.put(LanguageEnum.KO,new ProductInfo(LanguageEnum.KO, "Milk","Milk. Description. Kor", created, created));
+
+        priceInfoMap.put(CurrencyEnum.RUB,new PriceInfo(CurrencyEnum.RUB, BigDecimal.valueOf(50), created, created));
+        priceInfoMap.put(CurrencyEnum.UAH,new PriceInfo(CurrencyEnum.UAH, BigDecimal.valueOf(50), created, created));
+        priceInfoMap.put(CurrencyEnum.USD,new PriceInfo(CurrencyEnum.USD, BigDecimal.valueOf(50), created, created));
 
         productRepository.save(new Product(created, created, productInfoMap, priceInfoMap));
 
-//========
+
         productInfoMap.clear();
         priceInfoMap.clear();
-        productInfoMap.put(Language.ITA,new ProductInfo(Language.ITA, "Cheese","Cheese. Description. Ita", created, created));
+        productInfoMap.put(LanguageEnum.RU,new ProductInfo(LanguageEnum.RU, "Мясо","Мясо. Описание. Рус", created, created));
+        productInfoMap.put(LanguageEnum.EN,new ProductInfo(LanguageEnum.EN, "Meat","Meat. Description. Eng", created, created));
 
-        priceInfoMap.put(Currency.EUR,new PriceInfo(Currency.GBP, BigDecimal.valueOf(200), created, created));
+        priceInfoMap.put(CurrencyEnum.RUB,new PriceInfo(CurrencyEnum.RUB, BigDecimal.valueOf(100), created, created));
+        priceInfoMap.put(CurrencyEnum.GBP,new PriceInfo(CurrencyEnum.GBP, BigDecimal.valueOf(100), created, created));
+
+        productRepository.save(new Product(created, created, productInfoMap, priceInfoMap));
+
+
+        productInfoMap.clear();
+        priceInfoMap.clear();
+        productInfoMap.put(LanguageEnum.IT,new ProductInfo(LanguageEnum.IT, "Cheese","Cheese. Description. Ita", created, created));
+
+        priceInfoMap.put(CurrencyEnum.EUR,new PriceInfo(CurrencyEnum.GBP, BigDecimal.valueOf(200), created, created));
 
         productRepository.save(new Product(created, created, productInfoMap, priceInfoMap));
     }
 
-//
-//
-//
+
 //    public Product findByLanguageAndCurrencyAndId (String lang, String curr, String id) throws NoSuchElementException{
 //        if (lang==null||curr==null||id==null) throw new IllegalArgumentException("Illegal argument");
 //

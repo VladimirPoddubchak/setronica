@@ -3,17 +3,14 @@ package com.poddubchak.testtask.setronica.service.client;
 
 import com.poddubchak.testtask.setronica.dto.ClientProductDto;
 import com.poddubchak.testtask.setronica.exception.*;
-import com.poddubchak.testtask.setronica.model.Currency;
-import com.poddubchak.testtask.setronica.model.Language;
+import com.poddubchak.testtask.setronica.model.CurrencyEnum;
+import com.poddubchak.testtask.setronica.model.LanguageEnum;
 import com.poddubchak.testtask.setronica.model.Product;
 import com.poddubchak.testtask.setronica.repository.ClientProductDtoRepository;
 import com.poddubchak.testtask.setronica.repository.ProductRepository;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -46,8 +43,8 @@ public class ProductClientService implements ProductClientServiceInterface{
         log.info("findByIdByLanguageAndCurrency(id:"+id+"lang:"+lang+", curr:"+curr);
 
         UUID uuid = validUUID(id);
-        Language language = validLanguage(lang);
-        Currency currency = validCurrency(curr);
+        LanguageEnum language = validLanguage(lang);
+        CurrencyEnum currency = validCurrency(curr);
 
         if (!productRepository.existsById(uuid)){
             log.error("No product with uuid:"+uuid);

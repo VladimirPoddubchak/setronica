@@ -4,6 +4,8 @@ package com.poddubchak.testtask.setronica.controller;
 import com.poddubchak.testtask.setronica.dto.InfoDto;
 import com.poddubchak.testtask.setronica.dto.PriceDto;
 import com.poddubchak.testtask.setronica.dto.ProductDto;
+import com.poddubchak.testtask.setronica.model.CurrencyEnum;
+import com.poddubchak.testtask.setronica.model.LanguageEnum;
 import com.poddubchak.testtask.setronica.model.Product;
 import com.poddubchak.testtask.setronica.service.admin.AdminProductService;
 import lombok.extern.slf4j.Slf4j;
@@ -15,9 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.UUID;
+import java.util.*;
 
 @Slf4j
 @RestController
@@ -30,6 +30,17 @@ public class AdminProductController {
         this.service = service;
         log.info("AdminProductController started");
     }
+
+    @GetMapping("/currency")
+    public CurrencyEnum[] getCurrency(){
+        return CurrencyEnum.values();
+    }
+
+    @GetMapping("/language")
+    public LanguageEnum[] getLanguage(){
+        return LanguageEnum.values();
+    }
+
 
     /**
      curl -X POST http://localhost:8080/api/admin/products/ -H 'Content-Type: application/json' -d '{"language":"RUS","name":"Product_1","description":"Description for product_1","currency":"RUB","price":100}'

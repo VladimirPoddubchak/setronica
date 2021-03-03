@@ -1,8 +1,8 @@
 package com.poddubchak.testtask.setronica.dto;
 
 import com.poddubchak.testtask.setronica.exception.IllegalProductException;
-import com.poddubchak.testtask.setronica.model.Currency;
-import com.poddubchak.testtask.setronica.model.Language;
+import com.poddubchak.testtask.setronica.model.CurrencyEnum;
+import com.poddubchak.testtask.setronica.model.LanguageEnum;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
@@ -18,10 +18,10 @@ import java.util.UUID;
 @Slf4j
 public class ProductDto implements Serializable,Validatable {
     private UUID id;
-    private Language language;
+    private LanguageEnum language;
     private String name;
     private String description;
-    private Currency currency;
+    private CurrencyEnum currency;
     private BigDecimal price;
 
     @Override

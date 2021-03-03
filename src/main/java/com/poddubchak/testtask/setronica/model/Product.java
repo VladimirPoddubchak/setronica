@@ -5,7 +5,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
 import java.util.Map;
 import java.util.UUID;
 
@@ -30,19 +29,20 @@ public class Product {
             joinColumns = {@JoinColumn(name = "product_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "product_info_id", referencedColumnName = "id")})
     @MapKey(name = "language")
-    private Map<Language,ProductInfo> productInfoMap;
+    private Map<LanguageEnum,ProductInfo> productInfoMap;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "PRODUCT_PRICE_INFO",
             joinColumns = {@JoinColumn(name = "product_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "price_info_id", referencedColumnName = "id")})
     @MapKey(name = "currency")
-    private Map<Currency,PriceInfo> priceInfoMap;
+    private Map<CurrencyEnum,PriceInfo> priceInfoMap;
 
-    public Product(LocalDateTime created, LocalDateTime modified, Map<Language, ProductInfo> productInfoMap, Map<Currency, PriceInfo> priceInfoMap) {
+    public Product(LocalDateTime created, LocalDateTime modified, Map<LanguageEnum, ProductInfo> productInfoMap, Map<CurrencyEnum, PriceInfo> priceInfoMap) {
         this.created = created;
         this.modified = modified;
         this.productInfoMap = productInfoMap;
         this.priceInfoMap = priceInfoMap;
     }
+
 }

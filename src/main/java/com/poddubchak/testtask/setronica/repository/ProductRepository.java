@@ -1,7 +1,6 @@
 package com.poddubchak.testtask.setronica.repository;
 
-import com.poddubchak.testtask.setronica.model.Currency;
-import com.poddubchak.testtask.setronica.model.Language;
+import com.poddubchak.testtask.setronica.dto.ClientProductDto;
 import com.poddubchak.testtask.setronica.model.Product;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -108,4 +107,14 @@ public interface ProductRepository extends PagingAndSortingRepository<Product, U
 //    List<Product> findAllByProductInfoMapLanguage(Language lang);
 //    List<Product> findAllByPriceInfoMapCurrency(Currency curr);
 
+    @Query(value = "SELECT p.id, p.created, p.modified " +
+            "FROM product AS p, product_info, product_product_info,price_info, product_price_info " +
+            "WHERE p.id = :uuid " +
+            "AND product_info.language =:lang " +
+            "AND price_info.currency =:curr " +
+            "AND product_product_info.product_info_id = product_info.id " +
+            "AND product_price_info.price_info_id = price_info.id " +
+            "AND p.id = product_product_info.product_id " +
+            "AND p.id = product_price_info.product_id;", nativeQuery = true)
+    Product findByIdByLanguageAndCurrency(@Param("uuid") UUID uuid, @Param("lang") String lang, @Param("curr") String curr);
 }

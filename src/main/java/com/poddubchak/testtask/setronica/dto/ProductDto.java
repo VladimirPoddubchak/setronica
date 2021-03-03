@@ -1,6 +1,5 @@
 package com.poddubchak.testtask.setronica.dto;
 
-import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.poddubchak.testtask.setronica.exception.IllegalProductException;
 import com.poddubchak.testtask.setronica.model.Currency;
 import com.poddubchak.testtask.setronica.model.Language;

@@ -6,12 +6,15 @@ import com.poddubchak.testtask.setronica.exception.*;
 import java.util.List;
 
 public interface ProductClientServiceInterface {
-    List<ClientProductDto> searchByLanguageAndCurrency(String lang, String curr, String text)
-            throws NotFoundByLanguageOrCurrencyException, NoSuchLanguageException, NoSuchCurrencyException, IllegalSearchParameterException;
-
-    List<ClientProductDto> findAllByLanguageAndCurrency(String lang, String curr)
-            throws NotFoundByLanguageOrCurrencyException, NoSuchLanguageException, NoSuchCurrencyException;
 
     ClientProductDto findByIdByLanguageAndCurrency(String id, String lang, String curr)
-            throws ProductNotFoundException, NotFoundByLanguageOrCurrencyException, NoSuchLanguageException, NoSuchCurrencyException;
+            throws ProductNotFoundException, NotFoundByCurrencyException, NoSuchLanguageException, NoSuchCurrencyException;
+
+    List<ClientProductDto> searchByLanguageAndCurrency(String lang, String curr, String text)
+            throws NotFoundByCurrencyException, NoSuchLanguageException, NoSuchCurrencyException, IllegalSearchParameterException;
+
+    List<ClientProductDto> findAllByLanguageAndCurrency(String lang, String curr)
+            throws NotFoundByCurrencyException, NoSuchLanguageException, NoSuchCurrencyException;
+
+
 }

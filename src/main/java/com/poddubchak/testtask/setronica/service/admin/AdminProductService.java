@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -37,6 +38,7 @@ public class AdminProductService implements AdminProductInterface {
         this.infoRepository = infoRepository;
         this.priceRepository = priceRepository;
         log.info("AdminProductService started");
+//        addProducts();
     }
 
     @Override
@@ -293,7 +295,66 @@ public class AdminProductService implements AdminProductInterface {
         return result;
     }
 
+    public void addProducts(){
 
+        Map<Language, ProductInfo> productInfoMap = new HashMap<>();
+        Map<Currency, PriceInfo> priceInfoMap = new HashMap<>();
+
+        LocalDateTime created = LocalDateTime.now();
+
+ //========
+        productInfoMap.clear();
+        priceInfoMap.clear();
+        productInfoMap.put(Language.RUS,new ProductInfo(Language.RUS, "Хлеб","Хлеб. Описание. Рус", created, created));
+        productInfoMap.put(Language.BEL,new ProductInfo(Language.BEL, "Хлеб","Хлеб. Описание. Бел", created, created));
+        productInfoMap.put(Language.UKR,new ProductInfo(Language.UKR, "Хлеб","Хлеб. Описание. Укр", created, created));
+        productInfoMap.put(Language.ENG,new ProductInfo(Language.ENG, "Bread","Bread. Description. Eng", created, created));
+        productInfoMap.put(Language.ITA,new ProductInfo(Language.ITA, "Bread","Bread. Description. Ita", created, created));
+        productInfoMap.put(Language.KOR,new ProductInfo(Language.KOR, "Bread","Bread. Description. Kor", created, created));
+
+        priceInfoMap.put(Currency.RUB,new PriceInfo(Currency.RUB, BigDecimal.valueOf(40), created, created));
+        priceInfoMap.put(Currency.UAH,new PriceInfo(Currency.UAH, BigDecimal.valueOf(40), created, created));
+        priceInfoMap.put(Currency.USD,new PriceInfo(Currency.USD, BigDecimal.valueOf(40), created, created));
+        priceInfoMap.put(Currency.CAD,new PriceInfo(Currency.CAD, BigDecimal.valueOf(40), created, created));
+        priceInfoMap.put(Currency.GBP,new PriceInfo(Currency.GBP, BigDecimal.valueOf(40), created, created));
+
+        productRepository.save(new Product(created, created, productInfoMap, priceInfoMap));
+
+//========
+        productInfoMap.clear();
+        priceInfoMap.clear();
+
+        productInfoMap.put(Language.RUS,new ProductInfo(Language.RUS, "Молоко","Молоко. Описание. Рус", created, created));
+        productInfoMap.put(Language.BEL,new ProductInfo(Language.BEL, "Молоко","Молоко. Описание. Бел", created, created));
+        productInfoMap.put(Language.ITA,new ProductInfo(Language.ITA, "Milk","Milk. Description. Ita", created, created));
+        productInfoMap.put(Language.KOR,new ProductInfo(Language.KOR, "Milk","Milk. Description. Kor", created, created));
+
+        priceInfoMap.put(Currency.RUB,new PriceInfo(Currency.RUB, BigDecimal.valueOf(50), created, created));
+        priceInfoMap.put(Currency.UAH,new PriceInfo(Currency.UAH, BigDecimal.valueOf(50), created, created));
+        priceInfoMap.put(Currency.USD,new PriceInfo(Currency.USD, BigDecimal.valueOf(50), created, created));
+
+        productRepository.save(new Product(created, created, productInfoMap, priceInfoMap));
+
+//========
+        productInfoMap.clear();
+        priceInfoMap.clear();
+        productInfoMap.put(Language.RUS,new ProductInfo(Language.RUS, "Мясо","Мясо. Описание. Рус", created, created));
+        productInfoMap.put(Language.ENG,new ProductInfo(Language.ENG, "Meat","Meat. Description. Eng", created, created));
+
+        priceInfoMap.put(Currency.RUB,new PriceInfo(Currency.RUB, BigDecimal.valueOf(100), created, created));
+        priceInfoMap.put(Currency.GBP,new PriceInfo(Currency.GBP, BigDecimal.valueOf(100), created, created));
+
+        productRepository.save(new Product(created, created, productInfoMap, priceInfoMap));
+
+//========
+        productInfoMap.clear();
+        priceInfoMap.clear();
+        productInfoMap.put(Language.ITA,new ProductInfo(Language.ITA, "Cheese","Cheese. Description. Ita", created, created));
+
+        priceInfoMap.put(Currency.EUR,new PriceInfo(Currency.GBP, BigDecimal.valueOf(200), created, created));
+
+        productRepository.save(new Product(created, created, productInfoMap, priceInfoMap));
+    }
 
 //
 //

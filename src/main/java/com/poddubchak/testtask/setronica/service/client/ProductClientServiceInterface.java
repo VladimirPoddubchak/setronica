@@ -10,11 +10,12 @@ public interface ProductClientServiceInterface {
     ClientProductDto findByIdByLanguageAndCurrency(String id, String lang, String curr)
             throws ProductNotFoundException, NotFoundByCurrencyException, NoSuchLanguageException, NoSuchCurrencyException;
 
-    List<ClientProductDto> searchByLanguageAndCurrency(String lang, String curr, String text)
-            throws NotFoundByCurrencyException, NoSuchLanguageException, NoSuchCurrencyException, IllegalSearchParameterException;
+    List<ClientProductDto> searchByLanguageAndCurrencyPageable(String lang, String curr, String text, int page,int size)
+            throws NotFoundByCurrencyException, NoSuchLanguageException, NoSuchCurrencyException,
+            IllegalSearchParameterException, IllegalPageableException;
 
-    List<ClientProductDto> findAllByLanguageAndCurrency(String lang, String curr)
-            throws NotFoundByCurrencyException, NoSuchLanguageException, NoSuchCurrencyException;
+    List<ClientProductDto> findAllByLanguageAndCurrencyPageable(String lang, String curr, int page,int size)
+            throws NotFoundByCurrencyException, NoSuchLanguageException, NoSuchCurrencyException, IllegalPageableException;
 
 
 }

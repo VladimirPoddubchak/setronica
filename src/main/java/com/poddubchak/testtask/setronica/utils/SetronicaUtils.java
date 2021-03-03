@@ -1,9 +1,6 @@
 package com.poddubchak.testtask.setronica.utils;
 
-import com.poddubchak.testtask.setronica.exception.IllegalIdException;
-import com.poddubchak.testtask.setronica.exception.IllegalProductException;
-import com.poddubchak.testtask.setronica.exception.NoSuchCurrencyException;
-import com.poddubchak.testtask.setronica.exception.NoSuchLanguageException;
+import com.poddubchak.testtask.setronica.exception.*;
 import com.poddubchak.testtask.setronica.model.*;
 import com.poddubchak.testtask.setronica.repository.ProductRepository;
 import lombok.NonNull;
@@ -29,23 +26,61 @@ public class SetronicaUtils {
     return  UUID.fromString(id);
     }
 
+    public static void validateUUID(@NonNull String id){
+        try{
+            UUID.fromString(id);
+        }catch (IllegalArgumentException ex){
+            log.error("Invalid uuid:"+id);
+            throw  new IllegalIdException("Invalid uuid:"+id, ex);
+        }
+    }
+
     public static Currency validCurrency(@NonNull String curr){
         try{
             Currency currency = Currency.valueOf(curr.toUpperCase());
         }catch (IllegalArgumentException ex){
-            log.error("Invalid currency. curr:"+curr);
-            throw  new NoSuchCurrencyException("Invalid currency. curr:"+curr,ex);
+            log.error("Invalid currency:"+curr);
+            throw  new NoSuchCurrencyException("Invalid currency:"+curr,ex);
         }
         return Currency.valueOf(curr.toUpperCase());
     }
 
+    public static void validateCurrency(@NonNull String curr){
+        try{
+            Currency.valueOf(curr.toUpperCase());
+        }catch (IllegalArgumentException ex){
+            log.error("Invalid currency:"+curr);
+            throw  new NoSuchCurrencyException("Invalid currency:"+curr,ex);
+        }
+    }
+
     public static Language validLanguage(@NonNull String lang){
         try{
-            Language language = Language.valueOf(lang.toUpperCase());
+            Language.valueOf(lang.toUpperCase());
         }catch (IllegalArgumentException ex){
             log.error("Invalid language. lang:"+lang);
             throw  new NoSuchLanguageException("Invalid language. lang:"+lang,ex);
         }
         return Language.valueOf(lang.toUpperCase());
     }
+
+    public static void validateLanguage(@NonNull String lang){
+        try{
+            Language.valueOf(lang.toUpperCase());
+        }catch (IllegalArgumentException ex){
+            log.error("Invalid language:"+lang);
+            throw  new NoSuchLanguageException("Invalid language:"+lang,ex);
+        }
+    }
+
+    public static void validatePageSize(int page, int size){
+        if (page<0) {
+            log.error("Invalid page:"+page+" < 0");
+            throw  new IllegalPageableException("Invalid page:"+page+" < 0");
+        }
+        if (size<=0) {
+            log.error("Invalid size:"+ size+" <= 0");
+            throw  new IllegalPageableException("Invalid size:"+ size+" <= 0");
+        }
+    };
 }

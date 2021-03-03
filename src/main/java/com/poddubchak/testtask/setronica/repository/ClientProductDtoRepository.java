@@ -12,16 +12,16 @@ import java.util.UUID;
 @Repository
 public interface ClientProductDtoRepository extends PagingAndSortingRepository<ClientProductDto, UUID> {
 
-
     @Query(value = "SELECT p.id,product_info.language,product_info.name,product_info.description, price_info.currency, price_info.price, p.created, p.modified " +
-            "FROM product AS p, product_info, product_product_info,price_info, product_price_info " +
-            "WHERE p.id = :uuid " +
-            "AND product_info.language =:lang " +
-            "AND price_info.currency =:curr " +
-            "AND product_product_info.product_info_id = product_info.id " +
-            "AND product_price_info.price_info_id = price_info.id " +
-            "AND p.id = product_product_info.product_id " +
-            "AND p.id = product_price_info.product_id;", nativeQuery = true)
+                    "FROM product AS p, product_info, product_product_info,price_info, product_price_info " +
+                    "WHERE p.id = :uuid " +
+                        "AND product_info.language =:lang " +
+                        "AND price_info.currency =:curr " +
+                        "AND product_product_info.product_info_id = product_info.id " +
+                        "AND product_price_info.price_info_id = price_info.id " +
+                        "AND p.id = product_product_info.product_id " +
+                        "AND p.id = product_price_info.product_id;"
+            , nativeQuery = true)
     ClientProductDto findByIdByLanguageAndCurrency(@Param("uuid") UUID uuid, @Param("lang") String lang, @Param("curr") String curr);
 
     @Query(value = "WITH " +
@@ -41,26 +41,22 @@ public interface ClientProductDtoRepository extends PagingAndSortingRepository<C
                             "AND price_info.currency=:curr) " +
                     "SELECT product.id,lang.language,lang.name,lang.description,curr.currency,curr.price,product.created,product.modified " +
                     "FROM product,lang,curr " +
-                    "WHERE product.id = lang.id AND product.id = curr.id;", nativeQuery = true)
-    List<ClientProductDto> searchByLanguageAndCurrency(@Param("lang") String lang, @Param("curr") String curr, @Param("text") String text);
-
-
+                    "WHERE product.id = lang.id AND product.id = curr.id " +
+                    "LIMIT :limit OFFSET :offset ;"
+            , nativeQuery = true)
+    List<ClientProductDto> searchByLanguageAndCurrencyPageable(@Param("lang") String lang, @Param("curr") String curr, @Param("text") String text, @Param("offset") int offset, @Param("limit") int limit);
 
     @Query(value = "SELECT p.id,product_info.language,product_info.name,product_info.description, price_info.currency,price_info.price, p.created, p.modified " +
-            "FROM product AS p, product_info, product_product_info,price_info, product_price_info " +
-            "WHERE product_info.language =:lang " +
-            "AND price_info.currency =:curr " +
-            "AND product_product_info.product_info_id = product_info.id " +
-            "AND product_price_info.price_info_id = price_info.id " +
-            "AND p.id = product_product_info.product_id " +
-            "AND p.id = product_price_info.product_id;"
+                    "FROM product AS p, product_info, product_product_info,price_info, product_price_info " +
+                    "WHERE product_info.language =:lang " +
+                        "AND price_info.currency =:curr " +
+                        "AND product_product_info.product_info_id = product_info.id " +
+                        "AND product_price_info.price_info_id = price_info.id " +
+                        "AND p.id = product_product_info.product_id " +
+                        "AND p.id = product_price_info.product_id " +
+                    "LIMIT :limit OFFSET :offset ;"
             , nativeQuery = true)
-    List<ClientProductDto> findAllByLanguageAndCurrency(@Param("lang") String lang, @Param("curr") String curr);
-
-
-
-
-
+    List<ClientProductDto> findAllByLanguageAndCurrencyPageable(@Param("lang") String lang, @Param("curr") String curr, @Param("offset") int offset, @Param("limit") int limit);
 }
 
 

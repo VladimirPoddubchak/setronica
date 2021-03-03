@@ -11,6 +11,9 @@ import com.poddubchak.testtask.setronica.repository.ProductRepository;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,6 +38,7 @@ public class ProductClientService implements ProductClientServiceInterface{
         log.info("ProductClientService started");
     }
 
+
     @Override
     public ClientProductDto findByIdByLanguageAndCurrency(@NonNull String id, @NonNull String lang, @NonNull String curr )
             throws ProductNotFoundException, NotFoundByCurrencyException, NoSuchLanguageException, NoSuchCurrencyException,IllegalIdException{
@@ -45,20 +49,19 @@ public class ProductClientService implements ProductClientServiceInterface{
         Language language = validLanguage(lang);
         Currency currency = validCurrency(curr);
 
-
         if (!productRepository.existsById(uuid)){
-            log.error("findByIdByLanguageAndCurrency. No product with uuid:"+uuid);
+            log.error("No product with uuid:"+uuid);
             throw new ProductNotFoundException("No product with uuid:"+uuid);
         }
         Product product = productRepository.findById(uuid).get();
 
         if (!product.getProductInfoMap().containsKey(language)){
             log.error("Product hasn't info by language. uuid:"+uuid+" lang:"+lang);
-            throw new NotFoundByLanguageException("Product hasn't info by language. uuid:"+uuid+" lang:"+lang);
+            throw new NotFoundByLanguageException("Product uuid:"+uuid+" hasn't info by language:"+lang);
         }
         if (!product.getPriceInfoMap().containsKey(currency)){
             log.error("Product hasn't price by currency. uuid:"+uuid+" curr:"+curr);
-            throw new NotFoundByCurrencyException("Product hasn't price by currency. uuid:"+uuid+" curr:"+curr);
+            throw new NotFoundByCurrencyException("Product uuid:"+uuid+" hasn't price by currency:"+curr);
         }
 
         ClientProductDto result = new ClientProductDto(
@@ -73,26 +76,34 @@ public class ProductClientService implements ProductClientServiceInterface{
         );
         return result;
     }
+
     @Override
-    public List<ClientProductDto> searchByLanguageAndCurrency(@NonNull String lang, @NonNull String curr, @NonNull String text)
-            throws NoSuchLanguageException, NoSuchCurrencyException{
+    public List<ClientProductDto> searchByLanguageAndCurrencyPageable(@NonNull String lang, @NonNull String curr, @NonNull String text, @NonNull int page,@NonNull int size)
+            throws NoSuchLanguageException, NoSuchCurrencyException, IllegalPageableException{
         log.info("searchByLanguageAndCurrency(lang:"+lang+", curr:"+curr+" text:"+text);
 
-        Language language = validLanguage(lang);
-        Currency currency = validCurrency(curr);
+        validLanguage(lang);
+        validCurrency(curr);
+        validatePageSize(page,size);
 
-        return clientProductRepository.searchByLanguageAndCurrency(lang, curr, text);
+        int offset = page*size;
+
+        return clientProductRepository.searchByLanguageAndCurrencyPageable(lang, curr, text, offset, size);
     }
 
     @Override
-    public List<ClientProductDto> findAllByLanguageAndCurrency(@NonNull String lang, @NonNull String curr)
-            throws NoSuchLanguageException, NoSuchCurrencyException{
-        log.info("findAllByLanguageAndCurrency(lang:"+lang+", curr:"+ curr);
+    public List<ClientProductDto> findAllByLanguageAndCurrencyPageable(@NonNull String lang, @NonNull String curr, @NonNull int page,@NonNull int size)
+            throws NoSuchLanguageException, NoSuchCurrencyException,IllegalPageableException{
+        log.info("findAllByLanguageAndCurrency(lang:"+lang+", curr:"+ curr+", page:"+page+", size:"+size);
 
-        Language language = validLanguage(lang);
-        Currency currency = validCurrency(curr);
+        validLanguage(lang);
+        validCurrency(curr);
+        validatePageSize(page,size);
 
-        return clientProductRepository.findAllByLanguageAndCurrency(lang, curr);
+        int offset = page*size;
+        log.info("findAllByLanguageAndCurrency(lang:"+lang+", curr:"+ curr+", offset:"+offset+", size:"+size);
+
+        return clientProductRepository.findAllByLanguageAndCurrencyPageable(lang, curr, offset, size);
     }
 
 }

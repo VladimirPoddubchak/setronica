@@ -1,6 +1,5 @@
 package com.poddubchak.testtask.setronica.repository;
 
-import com.poddubchak.testtask.setronica.dto.ClientProductDto;
 import com.poddubchak.testtask.setronica.model.Product;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -22,10 +21,11 @@ public interface ProductRepository extends PagingAndSortingRepository<Product, U
 //            "ON product.id = product_product_info.product_id;
 
     @Query(value = "SELECT p.id,p.created,p.modified " +
-            "FROM product AS p, product_info AS pin, product_product_info AS ppi " +
-            "WHERE pin.language =:lang " +
-                "AND ppi.product_info_id = pin.id " +
-                "AND p.id = ppi.product_id;", nativeQuery = true)
+                    "FROM product AS p, product_info AS pin, product_product_info AS ppi " +
+                    "WHERE pin.language =:lang " +
+                        "AND ppi.product_info_id = pin.id " +
+                        "AND p.id = ppi.product_id;"
+            , nativeQuery = true)
     List<Product> findAllByLanguage(@Param("lang") String lang);
 
 
@@ -38,10 +38,11 @@ public interface ProductRepository extends PagingAndSortingRepository<Product, U
 //            "ON product.id = product_price_info.product_id;
 
     @Query(value = "SELECT p.id,p.created,p.modified " +
-            "FROM product AS p, price_info AS pin, product_price_info AS ppi " +
-            "WHERE pin.currency =:curr " +
-                "AND ppi.price_info_id = pin.id " +
-                "AND p.id = ppi.product_id;", nativeQuery = true)
+                    "FROM product AS p, price_info AS pin, product_price_info AS ppi " +
+                    "WHERE pin.currency =:curr " +
+                        "AND ppi.price_info_id = pin.id " +
+                        "AND p.id = ppi.product_id;"
+            , nativeQuery = true)
     List<Product> findAllByCurrency(@Param("curr") String curr);
 
 
@@ -63,13 +64,14 @@ public interface ProductRepository extends PagingAndSortingRepository<Product, U
 //        "WHERE product.id = lang.id AND product.id = curr.id;
 
     @Query(value = "SELECT p.id,p.created,p.modified " +
-            "FROM product AS p, product_info, product_product_info,price_info, product_price_info " +
-            "WHERE product_info.language =:lang " +
-                "AND price_info.currency =:curr " +
-                "AND product_product_info.product_info_id = product_info.id " +
-                "AND product_price_info.price_info_id = price_info.id " +
-                "AND p.id = product_product_info.product_id " +
-                "AND p.id = product_price_info.product_id;", nativeQuery = true)
+                    "FROM product AS p, product_info, product_product_info,price_info, product_price_info " +
+                    "WHERE product_info.language =:lang " +
+                        "AND price_info.currency =:curr " +
+                        "AND product_product_info.product_info_id = product_info.id " +
+                        "AND product_price_info.price_info_id = price_info.id " +
+                        "AND p.id = product_product_info.product_id " +
+                        "AND p.id = product_price_info.product_id;"
+            , nativeQuery = true)
     List<Product> findAllByLanguageAndCurrency(@Param("lang") String lang,@Param("curr") String curr);
 
 
@@ -93,28 +95,30 @@ public interface ProductRepository extends PagingAndSortingRepository<Product, U
 //        "WHERE product.id = lang.id AND product.id = curr.id;
 
     @Query(value = "SELECT p.id,p.created,p.modified " +
-            "FROM product AS p, product_info, product_product_info,price_info, product_price_info " +
-            "WHERE product_info.language =:lang " +
-                "AND price_info.currency =:curr " +
-                "AND (product_info.name LIKE '%'||:text||'%' " +
-                    "OR product_info.description LIKE '%'||:text||'%') " +
-                "AND product_product_info.product_info_id = product_info.id " +
-                "AND product_price_info.price_info_id = price_info.id " +
-                "AND p.id = product_product_info.product_id " +
-                "AND p.id = product_price_info.product_id;", nativeQuery = true)
+                    "FROM product AS p, product_info, product_product_info,price_info, product_price_info " +
+                    "WHERE product_info.language =:lang " +
+                        "AND price_info.currency =:curr " +
+                        "AND (product_info.name LIKE '%'||:text||'%' " +
+                            "OR product_info.description LIKE '%'||:text||'%') " +
+                        "AND product_product_info.product_info_id = product_info.id " +
+                        "AND product_price_info.price_info_id = price_info.id " +
+                        "AND p.id = product_product_info.product_id " +
+                        "AND p.id = product_price_info.product_id;"
+            , nativeQuery = true)
     List<Product> searchByLanguageAndCurrency(@Param("lang") String lang,@Param("curr") String curr,@Param("text") String text);
 
 //    List<Product> findAllByProductInfoMapLanguage(Language lang);
 //    List<Product> findAllByPriceInfoMapCurrency(Currency curr);
 
     @Query(value = "SELECT p.id, p.created, p.modified " +
-            "FROM product AS p, product_info, product_product_info,price_info, product_price_info " +
-            "WHERE p.id = :uuid " +
-            "AND product_info.language =:lang " +
-            "AND price_info.currency =:curr " +
-            "AND product_product_info.product_info_id = product_info.id " +
-            "AND product_price_info.price_info_id = price_info.id " +
-            "AND p.id = product_product_info.product_id " +
-            "AND p.id = product_price_info.product_id;", nativeQuery = true)
+                    "FROM product AS p, product_info, product_product_info,price_info, product_price_info " +
+                    "WHERE p.id = :uuid " +
+                        "AND product_info.language =:lang " +
+                        "AND price_info.currency =:curr " +
+                        "AND product_product_info.product_info_id = product_info.id " +
+                        "AND product_price_info.price_info_id = price_info.id " +
+                        "AND p.id = product_product_info.product_id " +
+                        "AND p.id = product_price_info.product_id;"
+            , nativeQuery = true)
     Product findByIdByLanguageAndCurrency(@Param("uuid") UUID uuid, @Param("lang") String lang, @Param("curr") String curr);
 }

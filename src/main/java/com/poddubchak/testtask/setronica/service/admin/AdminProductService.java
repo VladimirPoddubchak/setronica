@@ -8,6 +8,7 @@ import com.poddubchak.testtask.setronica.model.*;
 import com.poddubchak.testtask.setronica.repository.ProductInfoRepository;
 import com.poddubchak.testtask.setronica.repository.ProductPriceRepository;
 import com.poddubchak.testtask.setronica.repository.ProductRepository;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
+import static com.poddubchak.testtask.setronica.utils.SetronicaUtils.validUUID;
 
 @Slf4j
 @Service
@@ -43,16 +46,9 @@ public class AdminProductService implements AdminProductInterface {
 
     @Override
     @Transactional
-    public UUID createProduct(ProductDto dto) throws IllegalProductException {
-        if (dto==null){
-            log.error("ProductDto is null.");
-            throw new IllegalProductException("ProductDto is null.");
-        }
-        try{
-            dto.validate();
-        }catch(IllegalProductException ex){
-            throw new IllegalProductException("Invalid ProductDto." ,ex);
-        }
+    public UUID createProduct(@NonNull ProductDto dto) throws IllegalProductException {
+
+        dto.validate();
 
         Map<LanguageEnum, ProductInfo> productInfoMap = new HashMap<>();
         Map<CurrencyEnum, PriceInfo> priceInfoMap = new HashMap<>();
@@ -70,13 +66,9 @@ public class AdminProductService implements AdminProductInterface {
 
     @Override
     @Transactional
-    public Boolean deleteProductById(String id) throws ProductNotFoundException,IllegalIdException {
-        if (id==null){
-            log.error("UUID is null.");
-            throw new IllegalIdException("UUID is null.");
-        }
+    public Boolean deleteProductById(@NonNull String  id) throws ProductNotFoundException,IllegalIdException {
 
-        UUID uuid = UUID.fromString(id);
+        UUID uuid = validUUID(id);
 
         if (!productRepository.existsById(uuid)){
             log.error("No product with uuid: "+uuid);
@@ -88,13 +80,9 @@ public class AdminProductService implements AdminProductInterface {
     }
 
     @Override
-    public Product findProductById(String id) throws ProductNotFoundException,IllegalIdException {
-        if (id==null){
-            log.error("UUID is null.");
-            throw new IllegalIdException("UUID is null.");
-        }
+    public Product findProductById(@NonNull String id) throws ProductNotFoundException,IllegalIdException {
 
-        UUID uuid = UUID.fromString(id);
+        UUID uuid = validUUID(id);
 
         if (!productRepository.existsById(uuid)){
             log.error("No product with uuid: "+uuid);
@@ -108,126 +96,90 @@ public class AdminProductService implements AdminProductInterface {
 
     @Override
     @Transactional
-    public Long addProductInfoByProductId(String id, InfoDto dto) throws ProductNotFoundException, IllegalProductInfoException,IllegalIdException {
-        if (id==null){
-            log.error("UUID is null.");
-            throw new IllegalIdException("UUID is null.");
-        }
+    public Long addProductInfoByProductId(@NonNull String id, @NonNull InfoDto dto) throws ProductNotFoundException, IllegalProductInfoException,IllegalIdException {
 
-        UUID uuid = UUID.fromString(id);
-
-        if (dto==null){
-            log.error("InfoDto is null.");
-            throw new IllegalProductInfoException("InfoDto is null.");
-        }
+        UUID uuid = validUUID(id);
 
         if (!productRepository.existsById(uuid)){
             log.error("No product with uuid: "+uuid);
             throw new ProductNotFoundException("No product with uuid: "+uuid);
         }
 
-        try{
-            dto.validate();
-        }catch(IllegalProductInfoException ex){
-            throw new IllegalProductInfoException("Invalid InfoDto." ,ex);
-        }
+        dto.validate();
+        LanguageEnum language = dto.getLanguage();
 
         Product product = productRepository.findById(uuid).get();
 
-        if (product.getProductInfoMap().containsKey(dto.getLanguage())){
-            log.error("ProductInfo already exists.");
-            throw new IllegalProductInfoException("ProductInfo already exists");
+        if (product.getProductInfoMap().containsKey(language)){
+            log.error("Product uuid:"+uuid+", already has ProductInfo by language:"+language);
+            throw new IllegalProductInfoException("Product uuid:"+uuid+", already has ProductInfo by language:"+language);
         }
 
         LocalDateTime modified = LocalDateTime.now();
-        product.getProductInfoMap().put(dto.getLanguage(),
-                new ProductInfo(dto.getLanguage(),dto.getName(),dto.getDescription(),modified, modified));
+
+        product.getProductInfoMap().put(language, new ProductInfo(language,dto.getName(),dto.getDescription(),modified, modified));
 
         product.setModified(modified);
 
-        return productRepository.save(product).getProductInfoMap().get(dto.getLanguage()).getId();
+        return productRepository.save(product).getProductInfoMap().get(language).getId();
     }
 
 
     @Override
     @Transactional
-    public Long addPriceInfoByProductId(String id, PriceDto dto) throws ProductNotFoundException, IllegalProductPriceException,IllegalIdException {
+    public Long addPriceInfoByProductId(@NonNull String id, @NonNull PriceDto dto) throws ProductNotFoundException, IllegalProductPriceException, IllegalIdException {
 
-        if (id==null){
-            log.error("UUID is null.");
-            throw new IllegalIdException("UUID is null.");
-        }
-
-        UUID uuid = UUID.fromString(id);
-
-        if (dto==null){
-            log.error("PriceDto is null.");
-            throw new IllegalProductPriceException("PriceDto is null.");
-        }
+        UUID uuid = validUUID(id);
 
         if (!productRepository.existsById(uuid)){
             log.error("No product with uuid: "+uuid);
             throw new ProductNotFoundException("No product with uuid: "+uuid);
         }
 
-        try{
-            dto.validate();
-        }catch(IllegalProductPriceException ex){
-            throw new IllegalProductPriceException("Invalid PriceDto." ,ex);
-        }
+        dto.validate();
+        CurrencyEnum currency = dto.getCurrency();
 
         Product product = productRepository.findById(uuid).get();
 
-        if (product.getPriceInfoMap().containsKey(dto.getCurrency())){
-            log.error("PriceInfo Already exists.");
-            throw new IllegalProductPriceException("PriceInfo Already exists");
+        if (product.getPriceInfoMap().containsKey(currency)){
+            log.error("Product uuid:"+uuid+", already has PriceInfo by currency:"+currency);
+            throw new IllegalProductPriceException("Product uuid:"+uuid+", already has PriceInfo by currency:"+currency);
         }
 
         LocalDateTime modified = LocalDateTime.now();
-        product.getPriceInfoMap().put(dto.getCurrency(),
-                new PriceInfo(dto.getCurrency(),dto.getPrice(),modified, modified));
+
+        product.getPriceInfoMap().put(currency,new PriceInfo(currency,dto.getPrice(),modified, modified));
 
         product.setModified(modified);
 
-        return productRepository.save(product).getPriceInfoMap().get(dto.getCurrency()).getId();
+        return productRepository.save(product).getPriceInfoMap().get(currency).getId();
     }
 
     @Override
     @Transactional
-    public Long editProductInfoByProductId(String id, InfoDto dto) throws ProductNotFoundException, IllegalProductInfoException, IllegalIdException {
-        if (id==null){
-            log.error("UUID is null.");
-            throw new IllegalIdException("UUID is null.");
-        }
+    public Long editProductInfoByProductId(@NonNull String id,@NonNull  InfoDto dto) throws ProductNotFoundException, IllegalProductInfoException, IllegalIdException {
 
-        UUID uuid = UUID.fromString(id);
-
-        if (dto==null){
-            log.error("InfoDto is null.");
-            throw new IllegalProductInfoException("InfoDto is null.");
-        }
+        UUID uuid = validUUID(id);
 
         if (!productRepository.existsById(uuid)){
             log.error("No product with uuid: "+uuid);
             throw new ProductNotFoundException("No product with uuid: "+uuid);
         }
 
-        try{
-            dto.validate();
-        }catch(IllegalProductInfoException ex){
-            throw new IllegalProductInfoException("Invalid InfoDto." ,ex);
-        }
+        dto.validate();
+
+        LanguageEnum language = dto.getLanguage();
 
         Product product = productRepository.findById(uuid).get();
 
-        if (!product.getProductInfoMap().containsKey(dto.getLanguage())){
-            log.error("ProductInfo not exists.");
-            throw new IllegalProductInfoException("ProductInfo not exists");
+        if (!product.getProductInfoMap().containsKey(language)){
+            log.error("Product uuid:"+uuid+", hasn't ProductInfo by language:"+language);
+            throw new IllegalProductInfoException("Product uuid:"+uuid+", hasn't ProductInfo by language:"+language);
         }
 
         LocalDateTime modified = LocalDateTime.now();
 
-        ProductInfo info = infoRepository.findById(product.getProductInfoMap().get(dto.getLanguage()).getId()).get();
+        ProductInfo info = infoRepository.findById(product.getProductInfoMap().get(language).getId()).get();
 
         info.setName(dto.getName());
         info.setDescription(dto.getDescription());
@@ -241,40 +193,29 @@ public class AdminProductService implements AdminProductInterface {
 
     @Override
     @Transactional
-    public Long editPriceInfoByProductId(String id, PriceDto dto) throws ProductNotFoundException, IllegalProductPriceException, IllegalIdException {
-        if (id==null){
-            log.error("UUID is null.");
-            throw new IllegalIdException("UUID is null.");
-        }
+    public Long editPriceInfoByProductId(@NonNull String id, @NonNull PriceDto dto) throws ProductNotFoundException, IllegalProductPriceException, IllegalIdException {
 
-        UUID uuid = UUID.fromString(id);
-
-        if (dto==null){
-            log.error("PriceDto is null.");
-            throw new IllegalProductPriceException("PriceDto is null.");
-        }
+        UUID uuid = validUUID(id);
 
         if (!productRepository.existsById(uuid)){
             log.error("No product with uuid: "+uuid);
             throw new ProductNotFoundException("No product with uuid: "+uuid);
         }
 
-        try{
-            dto.validate();
-        }catch(IllegalProductPriceException ex){
-            throw new IllegalProductPriceException("Invalid PriceDto." ,ex);
-        }
+        dto.validate();
+
+        CurrencyEnum currency = dto.getCurrency();
 
         Product product = productRepository.findById(uuid).get();
 
-        if (!product.getPriceInfoMap().containsKey(dto.getCurrency())){
-            log.error("PriceInfo not exists.");
-            throw new IllegalProductPriceException("PriceInfo not exists");
+        if (!product.getPriceInfoMap().containsKey(currency)){
+            log.error("Product uuid:"+uuid+", hasn't PriceInfo by currency:"+currency);
+            throw new IllegalProductPriceException("Product uuid:"+uuid+", hasn't PriceInfo by currency:"+currency);
         }
 
         LocalDateTime modified = LocalDateTime.now();
 
-        PriceInfo price = priceRepository.findById(product.getPriceInfoMap().get(dto.getCurrency()).getId()).get();
+        PriceInfo price = priceRepository.findById(product.getPriceInfoMap().get(currency).getId()).get();
 
         price.setPrice(dto.getPrice());
         price.setModified(modified);
@@ -295,16 +236,13 @@ public class AdminProductService implements AdminProductInterface {
         return result;
     }
 
-    public void addProducts(){
+    private void addProducts(){
 
         Map<LanguageEnum, ProductInfo> productInfoMap = new HashMap<>();
         Map<CurrencyEnum, PriceInfo> priceInfoMap = new HashMap<>();
 
         LocalDateTime created = LocalDateTime.now();
 
- //========
-        productInfoMap.clear();
-        priceInfoMap.clear();
         productInfoMap.put(LanguageEnum.RU,new ProductInfo(LanguageEnum.RU, "Хлеб","Хлеб. Описание. Рус", created, created));
         productInfoMap.put(LanguageEnum.BE,new ProductInfo(LanguageEnum.BE, "Хлеб","Хлеб. Описание. Бел", created, created));
         productInfoMap.put(LanguageEnum.UK,new ProductInfo(LanguageEnum.UK, "Хлеб","Хлеб. Описание. Укр", created, created));
@@ -337,6 +275,7 @@ public class AdminProductService implements AdminProductInterface {
 
         productInfoMap.clear();
         priceInfoMap.clear();
+
         productInfoMap.put(LanguageEnum.RU,new ProductInfo(LanguageEnum.RU, "Мясо","Мясо. Описание. Рус", created, created));
         productInfoMap.put(LanguageEnum.EN,new ProductInfo(LanguageEnum.EN, "Meat","Meat. Description. Eng", created, created));
 
@@ -348,6 +287,7 @@ public class AdminProductService implements AdminProductInterface {
 
         productInfoMap.clear();
         priceInfoMap.clear();
+
         productInfoMap.put(LanguageEnum.IT,new ProductInfo(LanguageEnum.IT, "Cheese","Cheese. Description. Ita", created, created));
 
         priceInfoMap.put(CurrencyEnum.EUR,new PriceInfo(CurrencyEnum.GBP, BigDecimal.valueOf(200), created, created));

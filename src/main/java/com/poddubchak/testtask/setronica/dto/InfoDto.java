@@ -2,6 +2,7 @@ package com.poddubchak.testtask.setronica.dto;
 
 
 import com.poddubchak.testtask.setronica.exception.IllegalProductInfoException;
+import com.poddubchak.testtask.setronica.exception.NoSuchLanguageException;
 import com.poddubchak.testtask.setronica.model.LanguageEnum;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +21,7 @@ public class InfoDto implements Serializable, Validatable {
     private String description;
 
     @Override
-    public void validate() throws IllegalProductInfoException {
+    public void validate() throws IllegalProductInfoException, NoSuchLanguageException {
         if (this.language==null||this.name==null||this.description==null){
             log.error("InfoDto field is null.",this);
             throw new IllegalProductInfoException("InfoDto field is null.");
@@ -30,5 +31,4 @@ public class InfoDto implements Serializable, Validatable {
             throw new IllegalProductInfoException("Product name is blank.");
         }
     }
-
 }

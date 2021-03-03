@@ -1,9 +1,11 @@
 package com.poddubchak.testtask.setronica.controller;
 
 
+import com.poddubchak.testtask.setronica.dto.ClientError;
 import com.poddubchak.testtask.setronica.dto.InfoDto;
 import com.poddubchak.testtask.setronica.dto.PriceDto;
 import com.poddubchak.testtask.setronica.dto.ProductDto;
+import com.poddubchak.testtask.setronica.exception.*;
 import com.poddubchak.testtask.setronica.model.CurrencyEnum;
 import com.poddubchak.testtask.setronica.model.LanguageEnum;
 import com.poddubchak.testtask.setronica.model.Product;
@@ -46,38 +48,18 @@ public class AdminProductController {
      curl -X POST http://localhost:8080/api/admin/products/ -H 'Content-Type: application/json' -d '{"language":"RUS","name":"Product_1","description":"Description for product_1","currency":"RUB","price":100}'
      */
     @PostMapping("/")
-    public HttpEntity<UUID> createProduct(@RequestBody ProductDto dto){
+    public UUID createProduct(@RequestBody ProductDto dto){
 
-        UUID result = null;
-
-        try {
-            result = service.createProduct(dto);
-        }catch (IllegalArgumentException ex){
-            log.warn(ex+" ProductDto "+dto);
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Invalid ProductDto supplied",ex);
-        }catch (DataAccessException ex){
-            log.warn(ex.toString());
-            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,"Service unavailable",ex);
-        }
-        log.info("Create product request: ",dto);
-        return ResponseEntity.ok(result);
+        return service.createProduct(dto);
     }
 
     /**
      curl http://localhost:8080/api/admin/products
      */
     @GetMapping("/")
-    public HttpEntity<List<Product>> findAllProduct(){
+    public List<Product> findAllProduct(){
 
-        List<Product> result = null;
-        try {
-            result = service.findAll();
-         }catch (DataAccessException ex){
-            log.warn(ex.toString());
-            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,"Service unavailable",ex);
-        }
-        log.info("Get all products request");
-        return ResponseEntity.ok(result);
+        return service.findAll();
     }
 
 
@@ -85,23 +67,9 @@ public class AdminProductController {
      curl http://localhost:8080/api/admin/products/<uuid>
      */
     @GetMapping("/{id}")
-    public HttpEntity<Product> findProductById(@PathVariable String id){
+    public Product findProductById(@PathVariable String id){
 
-        Product result = null;
-        try {
-            result = service.findProductById(id);
-        }catch (IllegalArgumentException ex){
-            log.warn("Invalid UUID supplied: "+id,ex);
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Invalid UUID supplied",ex);
-        }catch (NoSuchElementException ex){
-            log.warn("Product doesn't exist, id: "+id,ex);
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Product doesn't exist",ex);
-        }catch (DataAccessException ex){
-            log.warn(ex.toString());
-            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,"Service unavailable",ex);
-        }
-        log.info("Get product request: ",id);
-        return ResponseEntity.ok(result);
+        return service.findProductById(id);
     }
 
 
@@ -110,211 +78,45 @@ public class AdminProductController {
      curl -X DELETE http://localhost:8080/api/admin/products/<uuid>
      */
     @DeleteMapping("/{id}")
-    public HttpEntity<Boolean> deleteProduct(@PathVariable String id){
+    public Boolean deleteProduct(@PathVariable String id){
 
-        Boolean result = false;
-        try {
-            result = service.deleteProductById(id);
-        }catch (IllegalArgumentException ex){
-            log.warn("Invalid UUID supplied: "+id,ex);
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Invalid UUID supplied",ex);
-        }catch (NoSuchElementException ex){
-            log.warn("Product doesn't exist, id: "+id,ex);
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Product doesn't exist",ex);
-        }catch (DataAccessException ex){
-            log.warn(ex.toString());
-            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,"Service unavailable",ex);
-        }
-        log.info("Delete product by id request. uuid: "+id);
-        return ResponseEntity.ok(result);
+        return service.deleteProductById(id);
     }
 
     /**
      curl -X POST http://localhost:8080/api/admin/products/info/<uuid>  -H 'Content-Type: application/json' -d '{"language":"ENG","name":"Product_eng","description":"Description for product_eng"}'
      */
     @PostMapping("/info/{id}")
-    public HttpEntity<Long> addInfoById(@RequestBody InfoDto dto, @PathVariable String id){
-        Long result = null;
-        try {
-            result = service.addProductInfoByProductId(id,dto);
-        }catch (IllegalArgumentException ex){
-            log.warn("Invalid UUID or ProductInfoDto supplied. uuid: "+id+ "dto: "+dto,ex);
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Invalid UUID or ProductInfoDto supplied",ex);
-        }catch (NoSuchElementException ex){
-            log.warn("Product doesn't exist, id: "+id,ex);
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Product doesn't exist",ex);
-        }catch (DataAccessException ex){
-            log.warn(ex.toString());
-            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,"Service unavailable",ex);
-        }
-        log.info("Add product info request. uuid: "+id+ "info:" +dto);
-        return ResponseEntity.ok(result);
+    public Long addInfoById(@RequestBody InfoDto dto, @PathVariable String id){
+
+        return service.addProductInfoByProductId(id,dto);
     }
 
     /**
      curl -X POST http://localhost:8080/api/admin/products/info/edit/<uuid>  -H 'Content-Type: application/json' -d '{"language":"RUS","name":"Product_1","description":"Description for product_1"}'
      */
     @PostMapping("/info/edit/{id}")
-    public HttpEntity<Long> editInfoById(@RequestBody InfoDto dto, @PathVariable String id){
-        Long result = null;
-        try {
-            result = service.editProductInfoByProductId(id,dto);
-        }catch (IllegalArgumentException ex){
-            log.warn("Invalid UUID or ProductInfoDto supplied. uuid: "+id+ "dto: "+dto,ex);
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Invalid UUID or ProductInfoDto supplied",ex);
-        }catch (NoSuchElementException ex){
-            log.warn("Product doesn't exist, id: "+id,ex);
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Product doesn't exist",ex);
-        }catch (DataAccessException ex){
-            log.warn(ex.toString());
-            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,"Service unavailable",ex);
-        }
-        log.info("Edit product info request. uuid: "+id+ "info:" +dto);
-        return ResponseEntity.ok(result);
+    public Long editInfoById(@RequestBody InfoDto dto, @PathVariable String id){
+
+        return service.editProductInfoByProductId(id,dto);
     }
 
     /**
      curl -X POST http://localhost:8080/api/admin/products/price/<uuid>  -H 'Content-Type: application/json' -d '{"currency":"EUR","price":555}'
      */
     @PostMapping("/price/{id}")
-    public HttpEntity<Long> addPriceById(@RequestBody PriceDto dto, @PathVariable String id){
-        Long result = null;
-        try {
-            result = service.addPriceInfoByProductId(id,dto);
-        }catch (IllegalArgumentException ex){
-            log.warn("Invalid UUID or ProductInfoDto supplied. uuid: "+id+ "dto: "+dto,ex);
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Invalid UUID or PriceDto supplied",ex);
-        }catch (NoSuchElementException ex){
-            log.warn("Product doesn't exist, id: "+id,ex);
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Product doesn't exist",ex);
-        }catch (DataAccessException ex){
-            log.warn(ex.toString());
-            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,"Service unavailable",ex);
-        }
-        log.info("Add product price request. uuid: "+id+ "price:" +dto);
-        return ResponseEntity.ok(result);
+    public Long addPriceById(@RequestBody PriceDto dto, @PathVariable String id){
+
+        return service.addPriceInfoByProductId(id,dto);
     }
 
     /**
      curl -X POST http://localhost:8080/api/admin/products/price/edit/<uuid>  -H 'Content-Type: application/json' -d '{"language":"RUS","name":"Product_1","description":"Description for product_1"}'
      */
     @PostMapping("/price/edit/{id}")
-    public HttpEntity<Long> editPriceById(@RequestBody PriceDto dto, @PathVariable String id){
-        Long result = null;
-        try {
-            result = service.editPriceInfoByProductId(id,dto);
-        }catch (IllegalArgumentException ex){
-            log.warn("Invalid UUID or ProductInfoDto supplied. uuid: "+id+ "dto: "+dto,ex);
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Invalid UUID or ProductInfoDto supplied",ex);
-        }catch (NoSuchElementException ex){
-            log.warn("Product doesn't exist, id: "+id,ex);
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Product doesn't exist",ex);
-        }catch (DataAccessException ex){
-            log.warn(ex.toString());
-            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,"Service unavailable",ex);
-        }
-        log.info("Add product price request. uuid: "+id+ "price:" +dto);
-        return ResponseEntity.ok(result);
+    public Long editPriceById(@RequestBody PriceDto dto, @PathVariable String id){
+
+        return service.editPriceInfoByProductId(id,dto);
     }
-//
-//    /**
-//     curl  http://localhost:8080/api/admin/products/lang/RUS
-//     */
-//    @GetMapping("/lang/{lang}")
-//    public HttpEntity<List<Product>> allProductsByLanguage(@PathVariable String lang){
-//        List<Product> result = null;
-//        try {
-//            result = service.findAllByLang(lang);
-//        }catch (IllegalArgumentException ex){
-//            log.warn("Invalid language supplied: "+lang,ex);
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Invalid language supplied",ex);
-//        }catch (DataAccessException ex){
-//            log.warn(ex.toString());
-//            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,"Service unavailable",ex);
-//        }
-//        log.info("Get all products by language request. lang: "+lang);
-//        return ResponseEntity.ok(result);
-//    }
-//
-//    /**
-//     curl  http://localhost:8080/api/admin/products/currency/USD
-//     */
-//    @GetMapping("/currency/{curr}")
-//    public HttpEntity<List<Product>> allProductsByCurrency(@PathVariable String curr){
-//        List<Product> result = null;
-//        try {
-//            result = service.findAllByCurrency(curr);
-//        }catch (IllegalArgumentException ex){
-//            log.warn("Invalid Currency supplied: "+curr,ex);
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Invalid currency supplied",ex);
-//        }catch (DataAccessException ex){
-//            log.warn(ex.toString());
-//            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,"Service unavailable",ex);
-//        }
-//        log.info("Get all products by currency request. curr: "+curr);
-//        return ResponseEntity.ok(result);
-//    }
-//
-//    /**
-//     curl  http://localhost:8080/api/admin/products/ENG/USD
-//     */
-//    @GetMapping("/{lang}/{curr}")
-//    public HttpEntity<List<Product>> findAllProductsByLanguageAndCurrency(@PathVariable String lang,@PathVariable String curr){
-//        List<Product> result = null;
-//        try {
-//            result = service.findAllByLanguageAndCurrency(lang,curr);
-//        }catch (IllegalArgumentException ex){
-//            log.warn("Invalid Language or Currency supplied: "+curr,ex);
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Invalid currency supplied",ex);
-//        }catch (DataAccessException ex){
-//            log.warn(ex.toString());
-//            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,"Service unavailable",ex);
-//        }
-//        log.info("Get all products by currency request: ",curr);
-//        return ResponseEntity.ok(result);
-//    }
-//
-//    /**
-//     curl  http://localhost:8080/api/admin/products/ENG/USD/<uuid>
-//     */
-//    @GetMapping("/{lang}/{curr}/{id}")
-//    public HttpEntity<Product> findByLanguageAndCurrencyAndId(@PathVariable String lang,@PathVariable String curr,@PathVariable String id){
-//        Product result = null;
-//        try {
-//            result = service.findByLanguageAndCurrencyAndId(lang,curr,id);
-//        }catch (IllegalArgumentException ex){
-//            log.warn("Invalid Language or Currency or UUID supplied. ",ex);
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Invalid Language or Currency or UUID supplied",ex);
-//        }catch (NoSuchElementException ex){
-//            log.warn("Product doesn't exist, id:"+id+ " lang:"+lang+" curr:"+curr,ex);
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Product doesn't exist",ex);
-//        }catch (DataAccessException ex){
-//            log.warn(ex.toString());
-//            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,"Service unavailable",ex);
-//        }
-//        log.info("Get all products by currency request: ",curr);
-//        return ResponseEntity.ok(result);
-//    }
-//
-//    /**
-//     curl  http://localhost:8080/api/admin/products/search/ENG/USD/<text>
-//     */
-//    @GetMapping("/search/{lang}/{curr}/{text}")
-//    public HttpEntity<List<Product>> searchByLanguageAndCurrency(@PathVariable String lang,@PathVariable String curr,@PathVariable String text){
-//        List<Product> result = null;
-//        try {
-//            result = service.searchByLanguageAndCurrency(lang,curr,text);
-//        }catch (IllegalArgumentException ex){
-//            log.warn("Invalid Language or Currency or UUID supplied. ",ex);
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Invalid Language or Currency or Text supplied",ex);
-//        }catch (NoSuchElementException ex){
-//            log.warn("Product doesn't exist. lang:"+lang+" curr:"+curr+" text:"+text,ex);
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Product doesn't exist",ex);
-//        }catch (DataAccessException ex){
-//            log.warn(ex.toString());
-//            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,"Service unavailable",ex);
-//        }
-//        log.info("Search products by language and currency. text:'"+text+"' lang:"+lang+ " curr:"+curr);
-//        return ResponseEntity.ok(result);
-//    }
+
 }
